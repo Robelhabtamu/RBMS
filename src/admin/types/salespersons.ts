@@ -1,0 +1,7 @@
+export type SalespersonStatus='ACTIVE'|'INACTIVE'
+export type SalespersonSort='NAME_ASC'|'NAME_DESC'|'REVENUE_DESC'|'RECENT_ACTIVITY'
+export type SalespersonFilters={status:string;locationId:string;boothId:string;assignmentState:string;search:string;sort:SalespersonSort}
+export type SalespersonRecord={id:string;full_name:string;email_snapshot:string|null;status:SalespersonStatus;role:'SALESPERSON';assignment_id:string|null;booth_id:string|null;booth_name:string|null;location_id:string|null;location_name:string|null;assignment_start_date:string|null;today_status:string;business_day_id:string|null;today_transactions:number;today_prints:number;today_revenue:number;paper_status:string;latest_closing_status:string|null;latest_activity:string|null;recent_business_days:number;recent_transactions:number;recent_prints:number;recent_revenue:number;recent_discrepancies:number;created_at:string;updated_at:string}
+export type SalespersonHistory={business_day_id:string;salesperson_id:string;business_date:string;status:string;booth_name:string;location_name:string;transactions:number;prints:number;revenue:number;paper_difference:number|null;revenue_difference:number|null;closing_status:string|null;started_at:string;closed_at:string|null}
+export type SalespersonSummary={total:number;active:number;assigned:number;unassigned:number}
+export type SalespersonOptions={locations:Array<{id:string;name:string}>;booths:Array<{id:string;name:string;locationId:string}>}

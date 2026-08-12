@@ -1,0 +1,8 @@
+import { getSupabaseClient } from '../../lib/supabase/client'
+import type { AdminReport, Comparison, ReportFilters, ReportOptions } from '../types/reports'
+
+const supabase = () => getSupabaseClient()
+export async function getReportOptions(): Promise<ReportOptions> { const [locations, booths] = await Promise.all([supabase().from('locations').select('id,name').eq('status','ACTIVE').order('name'), supabase().from('booths').select('id,name,location_id').eq('status','ACTIVE').order('name')]); if (locations.error || booths.error) throw new Error('Report filters could not be loaded.'); return { locations:(locations.data??[]).map(r=>({id:String(r.id),name:String(r.name)})), booths:(booths.data??[]).map(r=>({id:String(r.id),name:String(r.name),locationId:String(r.location_id)})) } }
+export async function getAdminReport(filters: ReportFilters): Promise<AdminReport> { const { data,error }=await supabase().rpc('admin_report',{p_date_from:filters.dateFrom,p_date_to:filters.dateTo,p_location_id:filters.locationId||null,p_booth_id:filters.boothId||null}); if(error) throw new Error(error.code==='42501'?'You do not have permission to view reports.':'Unable to load report. Apply the latest Supabase migration.'); return data as AdminReport }
+function change(current:number,previous:number){if(previous===0)return current===0?0:null;return ((current-previous)/Math.abs(previous))*100}
+export function compareReports(current:AdminReport,previous:AdminReport):Comparison{return {revenue:change(current.summary.revenue,previous.summary.revenue),prints:change(current.summary.prints,previous.summary.prints),transactions:change(current.summary.transactions,previous.summary.transactions)}}

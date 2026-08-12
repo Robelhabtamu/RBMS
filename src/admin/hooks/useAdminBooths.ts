@@ -1,0 +1,4 @@
+import { useEffect,useState } from 'react'
+import { getBooths } from '../services/adminBoothsService'
+import type { BoothFilters,BoothRecord,BoothSummary } from '../types/booths'
+export function useAdminBooths(filters:BoothFilters,page:number,refreshKey:number){const[records,setRecords]=useState<BoothRecord[]>([]);const[summary,setSummary]=useState<BoothSummary>({total:0,active:0,operating:0,attention:0});const[count,setCount]=useState(0);const[loading,setLoading]=useState(true);const[error,setError]=useState<string|null>(null);useEffect(()=>{let active=true;setLoading(true);setError(null);void getBooths(filters,page).then(r=>{if(active){setRecords(r.records);setSummary(r.summary);setCount(r.count)}}).catch(e=>{if(active)setError(e instanceof Error?e.message:'Unable to load booths.')}).finally(()=>{if(active)setLoading(false)});return()=>{active=false}},[filters,page,refreshKey]);return{records,summary,count,loading,error}}

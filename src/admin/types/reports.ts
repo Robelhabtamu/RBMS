@@ -1,0 +1,11 @@
+export type ReportFilters = { dateFrom: string; dateTo: string; locationId: string; boothId: string }
+export type ReportOptions = { locations: Array<{ id: string; name: string }>; booths: Array<{ id: string; name: string; locationId: string }> }
+export type ReportSummary = { transactions: number; prints: number; revenue: number; daysOperated: number; boothDays: number }
+export type ReportOperations = { activeBooths: number; expectedBoothDays: number; started: number; closed: number; open: number; balanced: number; discrepant: number; pendingReview: number; pastOpen: number }
+export type ReportPaper = { starting: number; added: number; prints: number; faulty: number; expectedRemaining: number; actualRemaining: number; closedWithActual: number; difference: number }
+export type ReportVerification = { required: number; verified: number; missing: number }
+export type ReportPayment = { code: string; name: string; transactions: number; prints: number; amount: number }
+export type ReportTrend = { date: string; transactions: number; prints: number; revenue: number; boothDays: number; balanced: number; issues: number }
+export type ReportBooth = { boothId: string; boothName: string; locationId: string; locationName: string; businessDayId: string | null; salesperson: string | null; status: string; closingStatus: string | null; boothDays: number; transactions: number; prints: number; revenue: number; faulty: number; paperDifference: number; revenueDifference: number; discrepancies: number; proofRequired: number; missingProof: number }
+export type AdminReport = { period: { from: string; to: string }; summary: ReportSummary; operations: ReportOperations; paper: ReportPaper; verification: ReportVerification; payments: ReportPayment[]; trend: ReportTrend[]; booths: ReportBooth[] }
+export type Comparison = { revenue: number | null; prints: number | null; transactions: number | null }

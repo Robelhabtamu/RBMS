@@ -62,7 +62,7 @@ export function SalespersonHomePage() {
     <div className="space-y-6 pt-3">
       <header>
         <p className="text-sm text-gray-500">Good day</p>
-        <h1 className="text-2xl font-bold tracking-tight">{profile?.full_name}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-brand-black">{profile?.full_name}</h1>
         {assignment && <p className="mt-2 text-sm text-gray-600"><span className="font-semibold text-gray-900">{assignment.boothName}</span> · {assignment.locationName}</p>}
       </header>
 
@@ -75,7 +75,7 @@ export function SalespersonHomePage() {
           <div className="mx-auto grid size-12 place-items-center rounded-full bg-redbooth-50 text-xl text-redbooth-600">●</div>
           <h2 className="mt-4 text-xl font-bold">Start Today's Day</h2>
           <p className="mt-2 text-sm text-gray-500">Enter the paper on hand before making the first sale.</p>
-          <button type="button" onClick={() => setShowStart(true)} className="mt-6 min-h-13 w-full rounded-2xl bg-redbooth-600 px-5 py-3 font-bold text-white">START DAY</button>
+          <button type="button" onClick={() => setShowStart(true)} className="rb-primary mt-6 min-h-13 w-full rounded-2xl px-5 py-3 font-bold">START DAY</button>
         </section>
       )}
 
@@ -85,7 +85,7 @@ export function SalespersonHomePage() {
           {context && context.assignments.length > 1 && <label className="mt-5 block text-sm font-medium">Assigned booth<select value={boothId} onChange={(event) => setBoothId(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border bg-white px-3">{context.assignments.map((item) => <option key={item.boothId} value={item.boothId}>{item.boothName} — {item.locationName}</option>)}</select></label>}
           <label className="mt-5 block text-sm font-medium">Paper quantity<input inputMode="numeric" min="0" step="1" required value={startingPaper} onChange={(event) => setStartingPaper(event.target.value)} className="mt-2 min-h-14 w-full rounded-xl border px-4 text-2xl font-bold outline-none focus:border-redbooth-500" /></label>
           {actionError && <div className="mt-4"><SalesNotice>{actionError}</SalesNotice></div>}
-          <button disabled={submitting} className="mt-5 min-h-13 w-full rounded-2xl bg-redbooth-600 px-5 py-3 font-bold text-white disabled:opacity-60">{submitting ? 'Starting...' : 'Confirm & Start'}</button>
+          <button disabled={submitting} className="rb-primary mt-5 min-h-13 w-full rounded-2xl px-5 py-3 font-bold disabled:opacity-60">{submitting ? 'Starting...' : 'Confirm & Start'}</button>
           <button type="button" onClick={() => setShowStart(false)} className="mt-2 min-h-12 w-full text-sm font-semibold text-gray-500">Cancel</button>
         </form>
       )}
@@ -94,7 +94,7 @@ export function SalespersonHomePage() {
         <>
           <div className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${day.status === 'OPEN' ? 'border-green-200 bg-green-50 text-green-800' : 'border-gray-200 bg-gray-100 text-gray-700'}`}>Today's day: {day.status.replaceAll('_', ' ')}</div>
           <DayStats day={day} totals={context.totals} />
-          {day.status === 'OPEN' && <Link to="/sales/new-sale" className="flex min-h-16 items-center justify-center rounded-2xl bg-redbooth-600 px-5 text-lg font-bold text-white shadow-sm">+ New Sale</Link>}
+          {day.status === 'OPEN' && <Link to="/sales/new-sale" className="rb-primary flex min-h-16 items-center justify-center rounded-2xl px-5 text-lg font-bold">+ New Sale</Link>}
           <div className="grid grid-cols-3 gap-3">
             <Link to="/sales/paper" className="rounded-2xl border bg-white p-4 text-center text-sm font-semibold shadow-sm">Paper</Link>
             <Link to="/sales/transactions" className="rounded-2xl border bg-white p-4 text-center text-sm font-semibold shadow-sm">Transactions</Link>

@@ -18,7 +18,7 @@ export function AdminDashboardPage() {
   return (
     <div className="mx-auto max-w-7xl">
       <div className="flex flex-col gap-5 border-b pb-7 lg:flex-row lg:items-end lg:justify-between">
-        <header><p className="text-xs font-bold uppercase tracking-[.2em] text-redbooth-600">RedBooth Admin</p><h1 className="mt-2 text-3xl font-bold tracking-tight">Dashboard</h1><p className="mt-2 text-sm text-gray-500">Today's business overview</p></header>
+        <header><p className="rb-kicker">RedBooth Admin</p><h1 className="mt-2 text-3xl font-extrabold tracking-tight text-brand-black">Dashboard</h1><p className="mt-2 text-sm text-gray-500">Today's business overview</p></header>
         <div className="grid gap-3 sm:grid-cols-2 lg:w-auto">
           <label className="text-xs font-semibold text-gray-600">Date<input type="date" value={businessDate} onChange={(event) => setBusinessDate(event.target.value)} className="mt-1 block min-h-11 w-full rounded-xl border bg-white px-3 text-sm font-medium lg:w-44" /></label>
           <label className="text-xs font-semibold text-gray-600">Location<select value={locationId} onChange={(event) => setLocationId(event.target.value)} className="mt-1 block min-h-11 w-full rounded-xl border bg-white px-3 text-sm font-medium lg:w-52"><option value="">All Locations</option>{data?.locations.map((location) => <option key={location.id} value={location.id}>{location.name}</option>)}</select></label>
@@ -36,7 +36,7 @@ export function AdminDashboardPage() {
               { label: 'Prints Sold', value: data.kpis.printsSold.toLocaleString(), accent: 'text-gray-950' },
               { label: 'Transactions', value: data.kpis.transactions.toLocaleString(), accent: 'text-gray-950' },
               { label: 'Balanced Booths', value: data.kpis.balancedBooths.toLocaleString(), accent: 'text-green-700' },
-            ].map((kpi) => <article key={kpi.label} className="rounded-2xl border bg-white p-5 shadow-sm"><p className="text-sm font-medium text-gray-500">{kpi.label}</p><p className={`mt-5 text-2xl font-bold tracking-tight tabular-nums ${kpi.accent}`}>{kpi.value}</p></article>)}
+            ].map((kpi, index) => <article key={kpi.label} className="relative overflow-hidden rounded-2xl border bg-white p-5 shadow-sm"><span className={`absolute inset-x-0 top-0 h-1 ${index === 3 ? 'bg-brand-green' : index === 1 ? 'bg-brand-yellow' : 'bg-redbooth-600'}`} /><p className="text-sm font-medium text-gray-500">{kpi.label}</p><p className={`mt-5 text-2xl font-extrabold tracking-tight tabular-nums ${kpi.accent}`}>{kpi.value}</p></article>)}
           </div>
         </section>
 

@@ -128,10 +128,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
     if (signInError) {
       const invalidCredentials = signInError instanceof AuthApiError && signInError.code === 'invalid_credentials'
+      const networkFailure = signInError.name === 'AuthRetryableFetchError'
+        || signInError.message.toLowerCase().includes('failed to fetch')
       throw {
         code: 'SIGN_IN_FAILED',
         message: invalidCredentials
           ? 'Supabase rejected the email or password.'
+          : networkFailure
+            ? 'The app cannot reach Supabase Auth. Check that the project is active, verify VITE_SUPABASE_URL, and check your DNS or internet connection.'
           : 'Supabase sign-in failed. Check the project URL, network connection, and Auth user configuration.',
       } satisfies AuthIssue
     }

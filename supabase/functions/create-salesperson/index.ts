@@ -35,8 +35,14 @@ Deno.serve(async(req)=>{
   if(!fullName||!/^\S+@\S+\.\S+$/.test(email)||password.length<8)return response({error:'Full name, valid email, and a password of at least 8 characters are required.'},400)
   const{data:created,error:createError}=await service.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{full_name:fullName}})
   if(createError||!created.user)return response({code:createError?.code==='email_exists'?'EMAIL_EXISTS':'AUTH_USER_CREATION_FAILED',error:createError?.code==='email_exists'?'An account with this email already exists.':'Supabase Auth could not create the salesperson account.'},400)
-  const{error:profileSetupError}=await service.from('profiles').update({full_name:fullName,email_snapshot:email,role:'SALESPERSON',status}).eq('id',created.user.id)
-  if(profileSetupError){await service.auth.admin.deleteUser(created.user.id);return response({error:'Unable to create salesperson profile.'},500)}
+  const{data:profileRows,error:profileSetupError}=await service.from('profiles').update({full_name:fullName,email_snapshot:email,role:'SALESPERSON',status}).eq('id',created.user.id).select('id')
+  if(profileSetupError||profileRows?.length!==1){
+    console.error({event:'salesperson_profile_setup_failed',auth_user_id:created.user.id,error_code:profileSetupError?.code??null,error_message:profileSetupError?.message??null,updated_rows:profileRows?.length??0})
+    const{error:cleanupError}=await service.auth.admin.deleteUser(created.user.id)
+    if(cleanupError)console.error({event:'salesperson_auth_cleanup_failed',auth_user_id:created.user.id,error_code:cleanupError.code??null,error_message:cleanupError.message})
+    const duplicateEmail=profileSetupError?.code==='23505'
+    return response({code:duplicateEmail?'PROFILE_EMAIL_EXISTS':'PROFILE_SETUP_FAILED',error:duplicateEmail?'A salesperson profile with this email already exists.':'Unable to create salesperson profile.'},duplicateEmail?409:500)
+  }
   await service.from('audit_logs').insert({actor_user_id:userData.user.id,entity_type:'salesperson_accounts',entity_id:created.user.id,action:'ACCOUNT_CREATED',new_values:{email,full_name:fullName,role:'SALESPERSON',status}})
   return response({salesperson:{id:created.user.id,email,fullName,status}},201)
 })
